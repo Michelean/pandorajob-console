@@ -108,6 +108,7 @@
         <el-pagination
           :total="this.instancePageResult.totalItems"
           :page-size="this.instancePageResult.pageSize"
+          :current-page.sync="current"
           @current-change="onClickChangeInstancePage"
           layout="prev, pager, next"
         />
@@ -194,6 +195,7 @@ export default {
       },
       // 日志弹出框是否可见
       instanceLogVisible: false,
+      current: 1,
       currentInstanceId: undefined,
       // 任务实例状态选择
       instanceStatusOptions: [
@@ -297,6 +299,7 @@ export default {
       this.logQueryContent.instanceId = data.instanceId;
       this.logQueryContent.index = 0;
       this.queryLog();
+      this.current = 1;
     },
     // 查看其它页的在线日志
     onClickChangeLogPage(index) {

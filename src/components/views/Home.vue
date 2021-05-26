@@ -13,16 +13,6 @@
                     </div>
                 </el-card>
             </el-col>
-                <el-col :span="6">
-                    <el-card shadow="always" style="text-align:center">
-                        <div>
-                            <a href="https://github.com/PowerJob/PowerJob" target="_blank">{{$t('message.githubURL')}}</a>
-                        </div>
-                        <div>
-                            <a href="https://github.com/PowerJob/PowerJob/wiki" target="_blank">{{$t('message.docURL')}}</a>
-                        </div>
-                    </el-card>
-                </el-col>
             <el-col :span="6">
                 <el-card shadow="always">
                     <div>
@@ -95,6 +85,7 @@
                     <el-table-column prop="address" :label="$t('message.workerAddress')"/>
                     <el-table-column prop="cpuLoad" :label="$t('message.cpuLoad')"/>
                     <el-table-column prop="memoryLoad" :label="$t('message.memoryLoad')"/>
+                    <el-table-column prop="systemInfo" :label="$t('message.systemInfo')"/>
                     <el-table-column prop="diskLoad" :label="$t('message.diskLoad')"/>
                     <el-table-column prop="tag" label="tag"/>
                     <el-table-column prop="lastActiveTime" :label="$t('message.lastActiveTime')"/>

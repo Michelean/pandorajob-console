@@ -33,7 +33,7 @@ const cn = {
         'phone': '手机号',
         'email': '邮箱地址',
         'webhook': 'WebHook',
-        'welcomeTitle': '欢迎使用 PowerJob!',
+        'welcomeTitle': '欢迎使用 Pandora-Job!',
         'login': '登陆',
         'logout': '退出',
         'changeAppInfo': '修改应用信息',
@@ -68,7 +68,7 @@ const cn = {
         'memoryLoad': '内存占用',
         'diskLoad': '磁盘占用',
         'lastActiveTime': '上次在线时间',
-
+        'systemInfo': '系统版本',
         // 任务管理
         'jobId': '任务 ID',
         'instanceId': '任务实例 ID',
@@ -88,6 +88,12 @@ const cn = {
         'containerProcessorInfoPLH': '容器ID#全限定类名，eg：1#tech.powerjob.HelloWordProcessor',
         'shellProcessorInfoPLH': 'SHELL 脚本文件内容',
         'pythonProcessorInfoPLH': 'Python 脚本文件内容',
+        'pythonFilePathPLH': 'Python文件全路径',
+        'javaFilePathPLH': 'java文件全路径',
+        'javaWindowsPLH': 'windows下java文件路径',
+        'pythonWindowsPLH': 'windows下python文件路径',
+        'exePLH': 'windows下exe文件路径',
+
         'runtimeConfig': '运行时配置',
         'maxInstanceNum': '最大实例数',
         'threadConcurrency': '单机线程并发度',
