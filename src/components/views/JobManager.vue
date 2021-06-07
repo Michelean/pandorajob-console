@@ -251,12 +251,17 @@
                             </el-select>
                         </el-col>
                         <el-col :span="12">
+                            <el-popover v-model="cronPopover">
+                             <vueCron @change="onChangeCron" @close="cronPopover = false"></vueCron>
                             <el-input
+                                slot="reference"
                                 v-model="modifiedJobForm.timeExpression"
+                                @click="cronPopover = true"
                                 :placeholder="
                                     $t('message.timeExpressionPlaceHolder')
                                 "
                             />
+                            </el-popover>
                         </el-col>
                         <el-col :span="4">
                             <el-button
@@ -648,7 +653,8 @@ export default {
             userList: [],
             templateList:[],
             // 时间表达式校验窗口
-            timeExpressionValidatorVisible: false
+            timeExpressionValidatorVisible: false,
+            cronPopover :true
         };
     },
     methods: {
@@ -676,6 +682,9 @@ export default {
             this.axios.post('/job/list', this.jobQueryContent).then(res => {
                 that.jobInfoPageResult = res;
             });
+        },
+        onChangeCron(v) {
+            this.modifiedJobForm.timeExpression = v
         },
         // 修改任务状态
         changeJobStatus(data) {
