@@ -54,6 +54,8 @@
             <el-table :data="containerPageResult.data" style="width: 100%">
                 <el-table-column :label="$t('message.containerId')" prop="id">
                 </el-table-column>
+                 <el-table-column :label="$t('message.containerTag')" prop="containerTag">
+                </el-table-column>
                 <el-table-column
                     :label="$t('message.containerName')"
                     prop="containerName"
@@ -203,6 +205,10 @@
                 class="genTable"
                 label-position="left"
             >
+                <el-form-item :label="$t('message.containerTag')">
+                    <el-input v-model="form.containerTag"></el-input>
+                </el-form-item>
+
                 <el-form-item :label="$t('message.containerName')">
                     <el-input v-model="form.containerName"></el-input>
                 </el-form-item>
@@ -346,6 +352,7 @@ export default {
                 sourceType: 'Git',
                 containerDesc:'',
                 containerName: '',
+                containerTag:'',
                 containerExecPath: ''
             },
             gitForm: {
@@ -444,6 +451,7 @@ export default {
             this.dialogVisible = true;
         },
         resetForm(){
+            this.form.containerTag = undefined;
             this.form.containerName = undefined;
             this.form.containerDesc = undefined;
             this.form.containerExecPath = undefined;
@@ -455,6 +463,7 @@ export default {
             let data = {
                 appId: this.appId,
                 containerName: this.form.containerName,
+                containerTag: this.form.containerTag,
                 containerDesc: this.form.containerDesc,
                 status: 'ENABLE',
                 id: this.id,
@@ -542,8 +551,10 @@ export default {
             } else{
                 this.form.sourceType = 'Config';
             }
+            this.form.containerTag = item.containerTag;
             this.form.containerName = item.containerName;
             this.form.containerDesc = item.containerDesc;
+            this.sourceInfo = item.sourceInfo;
             let execPath = item.containerExecPath;
             if(execPath !='' && execPath != undefined ){
                 this.form.containerExecPath = execPath;

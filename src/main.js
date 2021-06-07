@@ -13,7 +13,8 @@ import flyio from 'flyio';
 import router from "./router";
 import store from "./store";
 import common from "./common";
-
+import CodeEditor from 'bin-code-editor';
+Vue.use(CodeEditor);
 Vue.use(ElementUI);
 // let baseURL = "http://139.224.83.134:7700";
 let baseURL = process.env.VUE_APP_BASE_URL;
@@ -76,5 +77,6 @@ axios.interceptors.response.use((response) => {
   Message.error(error.toString());
   return Promise.reject(error);
 });
+
 
 export default baseURL;
