@@ -147,12 +147,18 @@
             :close-on-click-modal="false"
         >
             <el-form :model="templateContent" label-width="120px">
-                <el-input
-                    v-model="templateContent.name"
-                    :placeholder="'模板名称'"
-                />
-                    
-
+                 <el-form-item :label="'模板名称'">
+                    <el-input
+                        v-model="templateContent.name"
+                        :placeholder="'模板名称'"
+                    />
+                 </el-form-item>
+                 <el-form-item :label="'模板编号'">
+                    <el-input
+                        v-model="templateContent.code"
+                        :placeholder="'模板编号'"
+                    />
+                </el-form-item>
                 <!-- <vue-json-editor
                 style="padding-top:10px"
                 v-model="templateContent.json" 
@@ -161,7 +167,7 @@
                 lang="zh"   
                 @json-save="onJsonSave" 
                 ></vue-json-editor> -->
-
+        
                 <b-code-editor style="padding-top:10px" v-model="templateContent.json" :auto-format="true" :smart-indent="true" theme="dracula" :indent-unit="4" :line-wrap="false" ref="editor"></b-code-editor>
                 <br>
                 <div style="float:right">
@@ -604,6 +610,7 @@ export default {
                 appId: this.$store.state.appInfo.id,
                 id:'',
                 name:'',
+                code:'',
                 json:''
             },
             // 任务查询请求对象
@@ -906,6 +913,7 @@ export default {
         clearTemplate(){
             this.templateContent.id = undefined;
             this.templateContent.name = undefined;
+            this.templateContent.code = undefined;
             this.templateContent.json = '';
         },
         // 检测json格式
