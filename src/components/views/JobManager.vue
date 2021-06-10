@@ -353,14 +353,15 @@
 
                         <el-col :span="8">
                             <el-select
+                                v-model="modifiedJobForm.templateCode"
                                 @change="changeTemp"
                                 :placeholder="'选择参数模板'"
                             >
                                 <el-option
                                     v-for="item in templateList"
-                                    :key="item.id"
+                                    :key="item.code"
                                     :label="item.name"
-                                    :value="item.json"
+                                    :value="item.code"
                                 >
                                 </el-option>
                             </el-select>
@@ -600,7 +601,7 @@ export default {
                 minCpuCores: 0,
                 minMemorySpace: 0,
                 minDiskSpace: 0,
-
+                templateCode:'',
                 enable: true,
                 designatedWorkers: '',
                 maxWorkerCount: 0,
@@ -709,7 +710,13 @@ export default {
             }
         },
         changeTemp(value){
-            this.modifiedJobForm.jobParams = value;
+            let json = '';
+            this.templateList.forEach(t => {
+                if(t.code == value){
+                    json = t.json;
+                }
+            });
+            this.modifiedJobForm.jobParams = json;
         },
         onClickTemplate(){
             this.modifiedTemplate = true;
@@ -732,6 +739,7 @@ export default {
             this.modifiedJobForm.designatedWorkers = undefined;
             this.modifiedJobForm.containerScript = undefined;
             this.modifiedJobForm.containerConfig = undefined;
+            this.modifiedJobForm.templateCode = undefined;
             this.isContainer = false;
             this.modifiedJobFormVisible = true;
         },
