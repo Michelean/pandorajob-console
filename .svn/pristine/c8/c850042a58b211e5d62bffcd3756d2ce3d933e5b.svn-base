@@ -28,16 +28,15 @@
                         <el-button type="cancel" @click="onClickReset">{{
                             $t('message.reset')
                         }}</el-button>
-                        <el-button type="success"  @click="onClickTemplate">{{
-                        $t('message.template')
-                    }}</el-button>
                     </el-form-item>
                 </el-form>
             </el-col>
             <!-- 右侧新增任务按钮，占地面积 4/24 -->
             <el-col :span="4">
-                <div style="float:right">
-                     
+                <div style="float:right;padding-right:10px">
+                     <el-button type="primary" style="margin-right:20px" @click="onClickTemplate">{{
+                        $t('message.template')
+                    }}</el-button>
                     <el-button type="primary" @click="onClickNewJob">{{
                         $t('message.newJob')
                     }}</el-button>

@@ -28,16 +28,13 @@
                         <el-button type="cancel" @click="onClickReset">{{
                             $t('message.reset')
                         }}</el-button>
-                        <el-button type="success"  @click="onClickTemplate">{{
-                        $t('message.template')
-                    }}</el-button>
                     </el-form-item>
                 </el-form>
             </el-col>
+
             <!-- 右侧新增任务按钮，占地面积 4/24 -->
             <el-col :span="4">
-                <div style="float:right">
-                     
+                <div style="float:right;padding-right:10px">
                     <el-button type="primary" @click="onClickNewJob">{{
                         $t('message.newJob')
                     }}</el-button>
@@ -112,9 +109,6 @@
                                         }}</el-button
                                     >
                                 </el-dropdown-item>
-                                 <el-dropdown-item>
-                                  <el-button size="mini" type="text" @click="onClickCopyJob(scope.row)">{{$t('message.copy')}}</el-button>
-                                </el-dropdown-item>
                                 <el-dropdown-item>
                                     <el-button
                                         size="mini"
@@ -141,94 +135,6 @@
             />
         </el-row>
 
-         <el-dialog
-            :visible.sync="modifiedTemplateForm"
-            width="70%"
-            top="1.5vh"
-            :close-on-click-modal="false"
-        >
-            <el-form :model="templateContent" label-width="120px">
-                 <el-form-item :label="'模板名称'">
-                    <el-input
-                        v-model="templateContent.name"
-                        :placeholder="'模板名称'"
-                    />
-                 </el-form-item>
-                 <el-form-item :label="'模板编号'">
-                    <el-input
-                        v-model="templateContent.code"
-                        :placeholder="'模板编号'"
-                    />
-                </el-form-item>
-                <!-- <vue-json-editor
-                style="padding-top:10px"
-                v-model="templateContent.json" 
-                :show-btns="true"  
-                :mode="'code'" 
-                lang="zh"   
-                @json-save="onJsonSave" 
-                ></vue-json-editor> -->
-        
-                <b-code-editor style="padding-top:10px" v-model="templateContent.json" :auto-format="true" :smart-indent="true" theme="dracula" :indent-unit="4" :line-wrap="false" ref="editor"></b-code-editor>
-                <br>
-                <div style="float:right">
-                <el-button type="primary" @click="onJsonSave">提交</el-button>
-                <el-button @click="modifiedTemplateForm = false">{{
-                        $t('message.cancel')
-                    }}</el-button>
-                </div>
-                <el-button  @click="$refs['editor'].formatCode()">格式化</el-button>
-            </el-form>
-         </el-dialog>
-
-         <el-dialog
-            :visible.sync="modifiedTemplate"
-            width="60%"
-            top="1.5vh"
-            :close-on-click-modal="false"
-        >
-        <el-button type="primary" @click="newTemplate">{{
-                        '新建模板'
-                    }}</el-button>
-        
-            <el-table :data="templateList" style="width: 100%">
-                <el-table-column
-                    prop="id"
-                    :label="'模板id'"
-                    width="80"
-                />
-                 <el-table-column
-                    prop="name"
-                    :label="'模板名称'"
-                />
-                 <el-table-column
-                    prop="code"
-                    :label="'模板编号'"
-                />
-                <el-table-column
-                    prop="json"
-                    :label="'模板json'"
-                />
-                <el-table-column :label="$t('message.operation')" width="150">
-                    <template slot-scope="scope">
-                        <el-button
-                                size="mini"
-                                type="text"
-                                @click="editTemplate(scope.row)"
-                                >{{ $t('message.edit') }}</el-button
-                            >
-                            <el-button
-                                size="mini"
-                                type="text"
-                                @click="deleteTemplate(scope.row)"
-                                >{{ $t('message.delete') }}</el-button
-                            >
-                    </template>
-                </el-table-column>
-            </el-table>
-
-         </el-dialog>
-
         <el-dialog
             :visible.sync="modifiedJobFormVisible"
             width="60%"
@@ -243,7 +149,7 @@
                     <el-input v-model="modifiedJobForm.jobDescription" />
                 </el-form-item>
                 <el-form-item :label="$t('message.jobParams')">
-                    <el-input type="textarea" autosize v-model="modifiedJobForm.jobParams" />
+                    <el-input v-model="modifiedJobForm.jobParams" />
                 </el-form-item>
                 <el-form-item required="true" :label="$t('message.scheduleInfo')">
                     <el-row>
@@ -262,23 +168,17 @@
                             </el-select>
                         </el-col>
                         <el-col :span="12">
-                            <el-popover v-model="cronPopover">
-                             <vueCron @change="onChangeCron" @close="cronPopover = false"></vueCron>
                             <el-input
-                                slot="reference"
                                 v-model="modifiedJobForm.timeExpression"
-                                @click="cronPopover = true"
                                 :placeholder="
                                     $t('message.timeExpressionPlaceHolder')
                                 "
                             />
-                            </el-popover>
                         </el-col>
                         <el-col :span="4">
                             <el-button
                                 type="text"
-                                @click="onClickValidateTimeExpression"  
-                                style="padding-left: 10px"
+                                @click="onClickValidateTimeExpression"
                                 >{{
                                     $t('message.validateTimeExpression')
                                 }}</el-button
@@ -325,49 +225,30 @@
                 </el-form-item>
                 <el-form-item required="true" label="容器配置" v-if="isContainer">
                     <el-row>
-                         <el-col :span="8">
+                         <el-col :span="8" v-if="isContainer">
                             <el-select
                                 v-model="modifiedJobForm.containerScript"
                                 :placeholder="'选择执行脚本容器'"
-                                filterable
                             >
                                 <el-option
                                     v-for="item in containerScriptList"
                                     :key="item.id"
-                                    :label="item.containerTag==null?item.containerName :'【' + item.containerTag + '】' +item.containerName"
+                                    :label="item.containerName"
                                     :value="item.id"
                                 >
                                 </el-option>
                             </el-select>
                         </el-col>
-                         <el-col :span="8">
+                         <el-col :span="8" v-if="isContainer">
                             <el-select
                                 v-model="modifiedJobForm.containerConfig"
                                 :placeholder="'选择参数配置容器'"
-                                filterable
                             >
                                 <el-option
                                     v-for="item in containerConfigList"
                                     :key="item.id"
-                                    :label="item.containerTag==null?item.containerName :'【' + item.containerTag + '】' +item.containerName"
+                                    :label="item.containerName"
                                     :value="item.id"
-                                >
-                                </el-option>
-                            </el-select>
-                        </el-col>
-
-                        <el-col :span="8">
-                            <el-select
-                                v-model="modifiedJobForm.templateCode"
-                                @change="changeTemp"
-                                :clearable="true"
-                                :placeholder="'选择参数模板'"
-                            >
-                                <el-option
-                                    v-for="item in templateList"
-                                    :key="item.code"
-                                    :label="item.name"
-                                    :value="item.code"
                                 >
                                 </el-option>
                             </el-select>
@@ -453,7 +334,7 @@
                         </el-col>
                     </el-row>
                 </el-form-item>
-                <!-- <el-form-item :label="$t('message.workerConfig')">
+                <el-form-item :label="$t('message.workerConfig')">
                     <el-row>
                         <el-col :span="8">
                             <el-input
@@ -489,7 +370,7 @@
                             </el-input>
                         </el-col>
                     </el-row>
-                </el-form-item> -->
+                </el-form-item>
                 <el-form-item :label="$t('message.clusterConfig')">
                     <el-row>
                         <el-col :span="16">
@@ -564,7 +445,10 @@
             </el-form>
         </el-dialog>
 
-        <el-dialog :close-on-click-modal="false" :visible.sync="timeExpressionValidatorVisible" v-if='timeExpressionValidatorVisible'>
+        <el-dialog
+            :visible.sync="timeExpressionValidatorVisible"
+            v-if="timeExpressionValidatorVisible"
+        >
             <TimeExpressionValidator
                 :time-expression="modifiedJobForm.timeExpression"
                 :time-expression-type="modifiedJobForm.timeExpressionType"
@@ -575,16 +459,12 @@
 
 <script>
 import TimeExpressionValidator from '../common/TimeExpressionValidator';
-
-
 export default {
     name: 'JobManager',
     components: { TimeExpressionValidator },
     data() {
         return {
             modifiedJobFormVisible: false,
-            modifiedTemplate:false,
-            modifiedTemplateForm:false,
             // 新建任务对象
             modifiedJobForm: {
                 id: undefined,
@@ -607,18 +487,11 @@ export default {
                 minCpuCores: 0,
                 minMemorySpace: 0,
                 minDiskSpace: 0,
-                templateCode:'',
+
                 enable: true,
                 designatedWorkers: '',
                 maxWorkerCount: 0,
                 notifyUserIds: []
-            },
-            templateContent:{
-                appId: this.$store.state.appInfo.id,
-                id:'',
-                name:'',
-                code:'',
-                json:''
             },
             // 任务查询请求对象
             jobQueryContent: {
@@ -644,8 +517,11 @@ export default {
             ],
             // 处理器类型
             processorTypeOptions: [
-                { key: "BUILT_IN", label: this.$t('message.builtIn')},
-                { key: "EXTERNAL", label: this.$t('message.external')},
+                { key: 'EMBEDDED_JAVA', label: 'JAVA' },
+                {
+                    key: 'JAVA_CONTAINER',
+                    label: this.$t('message.javaContainer')
+                },
                 { key: 'CONTAINER_SCRIPT', label: '脚本容器' },
                 { key: 'SHELL', label: 'SHELL' },
                 { key: 'PYTHON2', label: 'PYTHON2' },
@@ -665,10 +541,8 @@ export default {
             ],
             // 用户列表
             userList: [],
-            templateList:[],
             // 时间表达式校验窗口
-            timeExpressionValidatorVisible: false,
-            cronPopover :true
+            timeExpressionValidatorVisible: false
         };
     },
     methods: {
@@ -697,9 +571,6 @@ export default {
                 that.jobInfoPageResult = res;
             });
         },
-        onChangeCron(v) {
-            this.modifiedJobForm.timeExpression = v
-        },
         // 修改任务状态
         changeJobStatus(data) {
             // switch 会自动更改 enable 的值
@@ -715,22 +586,6 @@ export default {
                 this.saveJob();
             }
         },
-        changeTemp(value){
-            let json = '';
-            this.templateList.forEach(t => {
-                if(t.code == value){
-                    json = t.json;
-                }
-            });
-            this.modifiedJobForm.jobParams = json;
-        },
-        onClickTemplate(){
-            this.modifiedTemplate = true;
-        },
-        newTemplate(){
-            this.clearTemplate();
-            this.modifiedTemplateForm = true;
-        },
         // 新增任务，去除旧数据
         onClickNewJob() {
             this.modifiedJobForm.id = undefined;
@@ -745,7 +600,6 @@ export default {
             this.modifiedJobForm.designatedWorkers = undefined;
             this.modifiedJobForm.containerScript = undefined;
             this.modifiedJobForm.containerConfig = undefined;
-            this.modifiedJobForm.templateCode = undefined;
             this.isContainer = false;
             this.modifiedJobFormVisible = true;
         },
@@ -790,39 +644,6 @@ export default {
                 that.listJobInfos();
             });
         },
-        editTemplate(data){
-            this.templateContent = JSON.parse(JSON.stringify(data));
-            this.modifiedTemplateForm = true;
-        },
-        deleteTemplate(data){
-        let url = '/template/delete?id=' + data.id;
-            this.axios.get(url).then(() => {
-                this.$message.success(this.$t('message.success'));
-                this.listTemplate();
-            });
-        },
-        // 点击 复制任务
-        onClickCopyJob(data) {
-            let url = "/job/copy?jobId=" + data.id;
-            let that = this;
-            this.axios.post(url).then(res => {
-            that.modifiedJobForm = res
-            
-            
-            let workers=res.designatedWorkers.toString();
-            
-            if(workers != ''){
-                let workerArr=workers.split(',');
-                that.modifiedJobForm.designatedWorkers=workerArr
-            }
-            if(res.processorType == 'CONTAINER_SCRIPT'){
-                this.isContainer = true;
-            }else{
-                this.isContainer = false;
-            }
-            that.modifiedJobFormVisible = true;
-            });
-        },
         // 点击 历史记录
         onClickRunHistory(data) {
             console.log(JSON.stringify(data));
@@ -858,10 +679,10 @@ export default {
         verifyPlaceholder(processorType) {
             let res;
             switch (processorType) {
-                case 'BUILT_IN':
+                case 'EMBEDDED_JAVA':
                     res = this.$t('message.javaProcessorInfoPLH');
                     break;
-                case 'EXTERNAL':
+                case 'JAVA_CONTAINER':
                     res = this.$t('message.containerProcessorInfoPLH');
                     break;
                 case 'SHELL':
@@ -912,59 +733,20 @@ export default {
         },
         // 翻译处理器类型
         translateProcessorType(processorType) {
-            if (processorType === 'EXTERNA') {
-                return this.$t('message.external');
+            if (processorType === 'JAVA_CONTAINER') {
+                return this.$t('message.javaContainer');
             }
             return processorType;
         },
         // 点击校验
         onClickValidateTimeExpression() {
             this.timeExpressionValidatorVisible = true;
-        },
-        listTemplate(){
-            this.axios.get('/template/list?appId='+ this.$store.state.appInfo.id).then(res => (this.templateList = res));
-        },
-        clearTemplate(){
-            this.templateContent.id = undefined;
-            this.templateContent.name = undefined;
-            this.templateContent.code = undefined;
-            this.templateContent.json = '';
-        },
-        // 检测json格式
-        isJSON(str) {
-            console.log(str);
-            try {
-                if(JSON.parse(str.trim())){
-                    return true;
-                }   
-            }catch (e) { 
-                return false;
-            }
-        },
-        onJsonSave(){
-            if (!this.isJSON(this.templateContent.json)){
-                this.$message.error(`json格式错误`)
-                return false;
-            }
-            this.templateContent.appId = this.$store.state.appInfo.id;
-            this.axios.post('/template/save', this.templateContent).then(
-                () => {
-                    this.modifiedTemplateForm = false;
-                    this.$message.success(this.$t('message.success'));
-
-                    // 重新加载数据
-                    this.listTemplate();
-                },
-                () => (this.modifiedTemplateForm = false)
-            );
-            
         }
     },
     mounted() {
         // 加载用户信息
         let that = this;
         that.axios.get('/user/list').then(res => (that.userList = res));
-        that.listTemplate();
         // 加载任务信息
         this.listJobInfos();
 

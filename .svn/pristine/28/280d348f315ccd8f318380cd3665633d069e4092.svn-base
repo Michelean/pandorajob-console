@@ -28,16 +28,15 @@
                         <el-button type="cancel" @click="onClickReset">{{
                             $t('message.reset')
                         }}</el-button>
-                        <el-button type="success"  @click="onClickTemplate">{{
-                        $t('message.template')
-                    }}</el-button>
                     </el-form-item>
                 </el-form>
             </el-col>
             <!-- 右侧新增任务按钮，占地面积 4/24 -->
             <el-col :span="4">
-                <div style="float:right">
-                     
+                <div style="float:right;padding-right:10px">
+                     <el-button type="primary" style="margin-right:20px" @click="onClickTemplate">{{
+                        $t('message.template')
+                    }}</el-button>
                     <el-button type="primary" @click="onClickNewJob">{{
                         $t('message.newJob')
                     }}</el-button>
@@ -148,18 +147,12 @@
             :close-on-click-modal="false"
         >
             <el-form :model="templateContent" label-width="120px">
-                 <el-form-item :label="'模板名称'">
-                    <el-input
-                        v-model="templateContent.name"
-                        :placeholder="'模板名称'"
-                    />
-                 </el-form-item>
-                 <el-form-item :label="'模板编号'">
-                    <el-input
-                        v-model="templateContent.code"
-                        :placeholder="'模板编号'"
-                    />
-                </el-form-item>
+                <el-input
+                    v-model="templateContent.name"
+                    :placeholder="'模板名称'"
+                />
+                    
+
                 <!-- <vue-json-editor
                 style="padding-top:10px"
                 v-model="templateContent.json" 
@@ -168,7 +161,7 @@
                 lang="zh"   
                 @json-save="onJsonSave" 
                 ></vue-json-editor> -->
-        
+
                 <b-code-editor style="padding-top:10px" v-model="templateContent.json" :auto-format="true" :smart-indent="true" theme="dracula" :indent-unit="4" :line-wrap="false" ref="editor"></b-code-editor>
                 <br>
                 <div style="float:right">
@@ -200,10 +193,6 @@
                  <el-table-column
                     prop="name"
                     :label="'模板名称'"
-                />
-                 <el-table-column
-                    prop="code"
-                    :label="'模板编号'"
                 />
                 <el-table-column
                     prop="json"
@@ -358,16 +347,14 @@
 
                         <el-col :span="8">
                             <el-select
-                                v-model="modifiedJobForm.templateCode"
                                 @change="changeTemp"
-                                :clearable="true"
                                 :placeholder="'选择参数模板'"
                             >
                                 <el-option
                                     v-for="item in templateList"
-                                    :key="item.code"
+                                    :key="item.id"
                                     :label="item.name"
-                                    :value="item.code"
+                                    :value="item.json"
                                 >
                                 </el-option>
                             </el-select>
@@ -607,7 +594,7 @@ export default {
                 minCpuCores: 0,
                 minMemorySpace: 0,
                 minDiskSpace: 0,
-                templateCode:'',
+
                 enable: true,
                 designatedWorkers: '',
                 maxWorkerCount: 0,
@@ -617,7 +604,6 @@ export default {
                 appId: this.$store.state.appInfo.id,
                 id:'',
                 name:'',
-                code:'',
                 json:''
             },
             // 任务查询请求对象
@@ -716,13 +702,7 @@ export default {
             }
         },
         changeTemp(value){
-            let json = '';
-            this.templateList.forEach(t => {
-                if(t.code == value){
-                    json = t.json;
-                }
-            });
-            this.modifiedJobForm.jobParams = json;
+            this.modifiedJobForm.jobParams = value;
         },
         onClickTemplate(){
             this.modifiedTemplate = true;
@@ -745,7 +725,6 @@ export default {
             this.modifiedJobForm.designatedWorkers = undefined;
             this.modifiedJobForm.containerScript = undefined;
             this.modifiedJobForm.containerConfig = undefined;
-            this.modifiedJobForm.templateCode = undefined;
             this.isContainer = false;
             this.modifiedJobFormVisible = true;
         },
@@ -927,7 +906,6 @@ export default {
         clearTemplate(){
             this.templateContent.id = undefined;
             this.templateContent.name = undefined;
-            this.templateContent.code = undefined;
             this.templateContent.json = '';
         },
         // 检测json格式
