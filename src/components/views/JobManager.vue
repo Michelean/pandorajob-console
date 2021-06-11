@@ -200,6 +200,10 @@
                     prop="name"
                     :label="'模板名称'"
                 />
+                 <el-table-column
+                    prop="code"
+                    :label="'模板编号'"
+                />
                 <el-table-column
                     prop="json"
                     :label="'模板json'"
@@ -355,6 +359,7 @@
                             <el-select
                                 v-model="modifiedJobForm.templateCode"
                                 @change="changeTemp"
+                                :clearable="true"
                                 :placeholder="'选择参数模板'"
                             >
                                 <el-option
