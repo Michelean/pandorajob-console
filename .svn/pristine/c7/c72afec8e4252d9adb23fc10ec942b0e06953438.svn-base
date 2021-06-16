@@ -969,10 +969,7 @@ export default {
         this.listJobInfos();
 
          that.axios.get('/system/listWorker?appId=' + this.$store.state.appInfo.id).then(res => {
-            that.workerList = res.filter(item => {
-                        //过滤离线机器
-                            return item.status != 9999;
-                        });
+            that.workerList = res;
         });
 
         that.axios.get('/container/list?appId=' + this.$store.state.appInfo.id).then(res => {
