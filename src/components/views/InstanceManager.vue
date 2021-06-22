@@ -145,6 +145,7 @@
           <el-col :span="24">
             <el-pagination
               :page-count="paginableInstanceLog.totalPages"
+              :current-page.sync="current"
               @current-change="onClickChangeLogPage"
               layout="prev, pager, next"
             />
